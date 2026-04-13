@@ -40,15 +40,13 @@ write.csv(Dados_Sinasc_2 , "dados_sinasc_2.csv")
 
 # Ao concluir a Tarefa 3 da Etapa 1 commite e envie para o repositório REMOTO o script e dados_sinasc_2.csv com o comentário "Dados do estado UF (coloque o nome da UF) e script de sua obtenção"
 
-
 # Tarefa 4. Verificar em dados_sinasc_2 a frequência das categorias das seguintes variáveis: LOCNASC, ESTCIVMAE, GESTACAO, GRAVIDEZ, PARTO,
-# SEXO, APGAR5, RACACOR, IDANOMAL, ESCMAE2010, RACACORMAE, TPAPRESENT, TPROBSON, PARIDADE, KOTELCHUCK
-
-
+# SEXO, APGAR5, RACACOR, IDANOMAL, ESCMAE2010, RACACORMAE, TPAPRESENT, TPROBSON, PARIDADE, KOTELCHUCKOMAL, Dados_Sinasc_2$ESCMAE2010,Dados_Sinasc_2$RACACORMAE,Dados_Sinasc_2$TPAPRESENT))
+varsNec = c("LOCNASC", "ESTCIVMAE", "GESTACAO", "GRAVIDEZ", "PARTO", "SEXO", "APGAR5", "RACACOR", "IDANOMAL", "ESCMAE2010", "RACACORMAE", "TPAPRESENT", "TPROBSON", "PARIDADE", "KOTELCHUCK")
+lapply(Dados_Sinasc_2[varsNec], table, useNA = "always")
 # Tarefa 5. Atribuir para cada variável de dados_sinasc_2 como sendo NA a categoria de "Não informado ou Ignorado", geralmente com código 9
 # KOTELCHUCK = 9 significa "não informado"   TPROBSON = 11 significa "não classificado por falta de informação"
 # veja o dicionário do SINASC para identificar qual o código das categorias de cada variável
-
 
 # Tarefa 6. Atribuir legendas para as categorias das variáveis investigadas na etapa 4.
 # Exemplo: dados_sinasc_2$KOTELCHUCK = factor(dados_sinasc_2$KOTELCHUCK, levels = c(1,2,3,4,5), 
