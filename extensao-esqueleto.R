@@ -26,6 +26,8 @@ Dados_Sinasc_1 = subset(Dados_Sinasc, select = c(1,4,5,6,7,12,13,14,15,19,21,22,
 # 25: PB, 26: PE, 27: AL, 28: SE, 29: BA, 31: MG, 32: ES, 33: RJ, 35: SP, 41: PR, 42: SC, 43: RS
 # 50: MS, 51: MT, 52: GO, 53: DF 
 
+UF = substr(as.character(Dados_Sinasc_1$CODMUNRES),1,2)
+Dados_Sinasc_2 = Dados_Sinasc_1[UF == "16",]
 # observar abaixo o número de nascimentos por UF de residência para certificar-se que seu banco de dados está correto
 # 11: 27918     12: 16980     13: 80097     14: 11409     15: 143657    16: 15750      17: 25110
 # 21: 117564    22: 49253     23: 132516    24: 49099     25: 59089     26: 145024     27: 52257     28: 34917     29: 206655
@@ -34,7 +36,7 @@ Dados_Sinasc_1 = subset(Dados_Sinasc, select = c(1,4,5,6,7,12,13,14,15,19,21,22,
 # 50: 44142     51: 56673     52: 100672    53: 46122 
 
 # Exportar o arquivo com o nome dados_sinasc_2.csv
-
+write.csv(Dados_Sinasc_2 , "dados_sinasc_2.csv")
 
 # Ao concluir a Tarefa 3 da Etapa 1 commite e envie para o repositório REMOTO o script e dados_sinasc_2.csv com o comentário "Dados do estado UF (coloque o nome da UF) e script de sua obtenção"
 
