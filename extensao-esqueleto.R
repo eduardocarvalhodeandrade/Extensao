@@ -13,10 +13,7 @@
 
 # A ALTERAÇÃO DO SCRIPT ESQUELETO - ETAPA 1 - DEVERÁ SER FEITA DENTRO DA BRANCH SINASC
 
-# Tarefa 1. Leitura do banco de dados do SINASC 2015  com 3017668 linhas e 61 colunas
-# verificar se a leitura foi feita corretamente e a estrutura dos dados
-# nomeie o banco de dados como dados_sinasc
-
+Dados_Sinasc = read.csv("SINASC_2015.csv", header = T, sep = ";")
 
 # Tarefa 2. Reduzir dados_sinasc apenas para as colunas que serão utilizadas, nomeando este novo banco de dados como dados_sinasc_1
 # as colunas serão 1, 4, 5, 6, 7, 12, 13, 14, 15, 19, 21, 22, 23, 24, 35, 38, 44, 46, 48, 59, 60, 61
