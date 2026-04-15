@@ -47,7 +47,16 @@ lapply(Dados_Sinasc_2[varsNec], table, useNA = "always")
 # Tarefa 5. Atribuir para cada variável de dados_sinasc_2 como sendo NA a categoria de "Não informado ou Ignorado", geralmente com código 9
 # KOTELCHUCK = 9 significa "não informado"   TPROBSON = 11 significa "não classificado por falta de informação"
 # veja o dicionário do SINASC para identificar qual o código das categorias de cada variável
+NumIndesej = c(9,9,9,9,9,0,9,9,9,11,9) #apgar,racacor,racacormae,paridade não precisa.
+varsNec2 = c("LOCNASC","ESTCIVMAE","GESTACAO","GRAVIDEZ","PARTO","SEXO", "IDANOMAL", "ESCMAE2010", "TPAPRESENT", "TPROBSON", "KOTELCHUCK")
 
+transforme = function(df,col,numero){
+  df[[col]][df[col] == numero] = NA
+  df
+}
+for (i in 1:length(NumIndesej)){
+  Dados_Sinasc_2 = transforme(Dados_Sinasc_2,varsNec2[i],NumIndesej[i])
+}
 # Tarefa 6. Atribuir legendas para as categorias das variáveis investigadas na etapa 4.
 # Exemplo: dados_sinasc_2$KOTELCHUCK = factor(dados_sinasc_2$KOTELCHUCK, levels = c(1,2,3,4,5), 
 # labels = c("Não realizou pré-natal", "Inadequado", "Intermediário", "Adequado",  
