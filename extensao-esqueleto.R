@@ -62,6 +62,19 @@ for (i in 1:length(NumIndesej)){
 # labels = c("Não realizou pré-natal", "Inadequado", "Intermediário", "Adequado",  
 # "Mais que adequado")
 
+Dados_Sinasc_2$LOCNASC = factor(Dados_Sinasc_2$LOCNASC, c(1,2,3,4,5), c("Hospital", "Outros estabelecimentos de saúde", "Domicílio", "Outros", "Aldeia indígena"))
+Dados_Sinasc_2$ESTCIVMAE = factor(Dados_Sinasc_2$ESTCIVMAE, c(1,2,3,4,5), c("Solteira","Casada","Viúva","Separada judicialmente/divorciada", "União estável"))
+Dados_Sinasc_2$GESTACAO = factor(Dados_Sinasc_2$GESTACAO, c(1,2,3,4,5,6), c("Menos de 22 semanas", "22 a 27 semanas", "28 a 31 semanas", "32 a 36 semanas", "37 a 41 semanas", "41 semanas e mais"))
+Dados_Sinasc_2$GRAVIDEZ = factor(Dados_Sinasc_2$GRAVIDEZ, c(1,2,3), c("Única", "Dupla", "Tripla ou mais"))
+Dados_Sinasc_2$PARTO = factor(Dados_Sinasc_2$PARTO, c(1,2), c("Vaginal", "Cesário"))
+Dados_Sinasc_2$SEXO = factor(Dados_Sinasc_2$SEXO, c(1,2), c("Masculino","Feminino"))
+Dados_Sinasc_2$IDANOMAL = factor(Dados_Sinasc_2$IDANOMAL, c(1,2), c("Sim", "Não"))
+Dados_Sinasc_2$RACACOR = factor(Dados_Sinasc_2$RACACOR, c(1,2,3,4,5), c("Branca", "Preta", "Amarela", "Parda", "Indígena"))
+Dados_Sinasc_2$ESCMAE2010 = factor(Dados_Sinasc_2$ESCMAE2010, c(0,1,2,3,4,5), c("Sem escolaridade", "Fundamental I", "Fundamental II", "Médio", "Superior incompleto", "Superior completo"))
+Dados_Sinasc_2$RACACORMAE = factor(Dados_Sinasc_2$RACACORMAE, c(1,2,3,4,5), c("Branca","Preta","Amarela","Parda","Indígena"))
+Dados_Sinasc_2$TPAPRESENT = factor(Dados_Sinasc_2$TPAPRESENT, c(1,2,3), c("Cefálico","Pélvica ou podálica","Transversa"))
+Dados_Sinasc_2$TPROBSON = factor(Dados_Sinasc_2$TPROBSON, c(1,2,3,4,5,6,7,8,9,10), c("Grupo 1", "Grupo 2", "Grupo 3", "Grupo 4", "Grupo 5", "Grupo 6", "Grupo 7", "Grupo 8", "Grupo 9", "Grupo 10"))
+Dados_Sinasc_2$KOTELCHUCK = factor(Dados_Sinasc_2$KOTELCHUCK, c(1,2,3,4,5), c("Não realizou pré-natal", "Inadequado", "Intermediário", "Adequado", "Mais que adequado"))
 # ATENçÃO: 1. Na hora de escrever os labels, somente a primeira letra da palavra é maiúscula. Exemplo para SEXO: Feminino e Masculino
 #          2. Nesta Tarefa 6 não crie novas variáveis no banco de dados
 
@@ -72,8 +85,12 @@ for (i in 1:length(NumIndesej)){
 # nova variável dados_sinasc_2$F_APGAR5 com APGAR5: < 7: Baixo, >= 7: Normal
 # Atenção para casos de NA em IDADEMAE, PESO e APGAR5
 # Ao categorizar as variáveis, garantir que sejam transformadas em tipo fator
-
-
+Dados_Sinasc_2$F_PESO = as.factor(ifelse(Dados_Sinasc_2$PESO < 2500, "Baixo peso", ifelse(Dados_Sinasc_2$PESO < 4000, "Peso normal", "Macrossomia")))
+Dados_Sinasc_2$F_IDADE = cut(Dados_Sinasc_2$IDADEMAE, breaks=c(-Inf, 15, 20, 25, 30, 35, 40, 45, 50, Inf), labels = c("<15", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50+"), right = FALSE)
+Dados_Sinasc_2$F_APGAR5 = as.factor(ifelse(Dados_Sinasc_2$APGAR5 < 7, "Baixo", "Normal"))
+class(Dados_Sinasc_2$F_PESO)
+class(Dados_Sinasc_2$F_IDADE)
+class(Dados_Sinasc_2$F_APGAR5) #Todos factor
 # Tarefa 8. Agregar ao banco de dados_sinasc_2 as informações PESO_P10 e PESO_P90 a partir de Tabela_PIG_Brasil.csv
 # a Tabela PIG informa P10 e P90 dos pesos, de acordo com a idade gestacional
 # criar nova variável referente ao peso, de acordo com a idade gestacional, conforme indicado abaixo
