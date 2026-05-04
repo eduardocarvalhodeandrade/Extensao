@@ -334,12 +334,14 @@ write.csv(SINASC_AC, "SINASC_AP.csv")
 # Ao terminar a ETAPA 1 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 1"
 
 
-
 ##################################
 # ETAPA 2: BANCO DE DADOS DO SIM
 ##################################
 # Só inicie esta Etapa quando a professora orientar
-# ESTANDO NA BRANCH SINASC, NÃO ALTERE NADA NO SCRIPT REFERENTE A ETAPA 2
+# Altere o script esqueleto nas partes que se refere a ETAPA 2 e envie para o repositório Extensao tendo feito o commite "Esqueleto atualizado na Etapa 2"
+# A partir de main crie a branch SIM
+# ESTANDO NA BRANCH SIM, NÃO ALTERE NADA NO SCRIPT REFERENTE A ETAPA 1 e só insira comandos na ETAPA 2
+# Para realizar as tarefas da ETAPA 2, ABRIR ANTES uma branch de nome SINASC no main de Extensao e ir para ela
 
 # Tarefa 1. Leitura do banco de dados Mortalidade_Geral_2015 do SIM 2015 com 1216475 linhas e 87 colunas
 # verificar se a leitura foi feita corretamente e a estrutura dos dados
@@ -347,10 +349,57 @@ write.csv(SINASC_AC, "SINASC_AP.csv")
 
 
 # Tarefa 2. Reduzir dados_sim apenas para as colunas que serão utilizadas, nomeando este novo banco de dados como dados_sim_1
-# as colunas serão (a informar)
-# nomes das respectivas variáveis: CONTADOR, TIPOBITO, CODMUNNATU, IDADE,  SEXO,  RACACOR,  ESTCIV, ESC2010, 
-# CODMUNRES,  LOCOCOR, CODMUNOCOR, TPMORTEOCO,  OBITOGRAV, OBITOPUERP, CAUSABAS, CAUSABAS_O, TPOBITOCOR, MORTEPARTO
+# as colunas serão: 1, 3, 4, 8, 9, 10, 11, 14, 17, 35, 36, 37, 47, 77, 84
+# nomes das respectivas variáveis: CONTADOR, TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO, RACACOR, ESC2010, CODMUNRES, TPMORTEOCO, 
+# OBITOGRAV, OBITOPUERP, CAUSABAS, TPOBITOCOR, MORTEPARTO
 
+# Tarefa 3. Reduzir dados_sim_1 apenas para o estado que o aluno irá trabalhar (utilizar os dois primeiros dígitos de CODMUNRES), nomeando este novo banco de dados como dados_sim_2
+# Códigos das UF: 11: RO, 12: AC, 13: AM, 14: RR, 15: PA, 16: AP, 17: TO, 21: MA, 22: PI, 23: CE, 24: RN
+# 25: PB, 26: PE, 27: AL, 28: SE, 29: BA, 31: MG, 32: ES, 33: RJ, 35: SP, 41: PR, 42: SC, 43: RS
+# 50: MS, 51: MT, 52: GO, 53: DF 
+
+# observar abaixo o número de óbitos por UF de residência para certificar-se que seu banco de dados está correto
+# 11: 7948      12: 3517      13: 16675     14: 2091      15: 37365     16: 2946       17: 7402
+# 21: 33666     22: 19366     23: 55258     24: 20153     25: 26422     26: 62556      27: 19756     28: 13453     29: 87083
+# 31: 131274    32: 22332     33: 127714    35: 287645     
+# 41: 70839     42: 37984     43: 82349
+# 50: 15457     51: 17095     52: 38854     53: 11975
+
+# Exportar o arquivo com o nome dados_sim_2.csv
+
+
+# Ao concluir a Tarefa 3 da Etapa 2 commite e envie para o repositório REMOTO o script e dados_sim_2.csv com o comentário "Dados do estado UF (coloque o nome da UF) e script de sua obtenção"
+
+
+# Tarefa 4. Verificar em dados_sim_2 a frequência das categorias das seguintes variáveis: TIPOBITO, SEXO, RACACOR, 
+# TPMORTEOCO, OBITOGRAV, OBITOPUERP, CAUSABAS, TPOBITOCOR, MORTEPARTO
+
+
+# Tarefa 5. Atribuir para cada variável de dados_sim_2 como sendo NA a categoria de "Não informado ou Ignorado", geralmente com código 9
+# veja o dicionário do SIM para identificar qual o código das categorias de cada variável
+# Em variáveis quantitativas como IDADE verificar se existem valores como 99 para NA
+
+
+# Tarefa 6. Atribuir legendas para as categorias das variáveis qualitativas investigadas na tarefa 4.
+# Exemplo: dados_sim_2$TIPOBITO = factor(dados_sim_2$TIPOBITO, levels = c(1,2), 
+# labels = c("Fetal", "Não fetal")
+
+# ATENçÃO: 1. Na hora de escrever os labels, somente a primeira letra da palavra é maiúscula. Exemplo para SEXO: Feminino e Masculino
+#          2. Nesta Tarefa 6 não crie novas variáveis no banco de dados
+
+
+# Tarefa 7. Crie um banco de dados, de nome SIM_UF.csv (Exemplo: SIM_RJ.csv), contendo as 41 variáveis listadas no arquivo “Variáveis - Projeto - Tarefa 7 da Etapa 2.pdf”
+# Atenção:
+# 1. Para informações gerais utilize CAUSABAS, SEXO e IDADE
+# 2. Para informações fetais utilize TIPOBITO
+# 3. Para informações neonatais utilize TIPOBITO não fetal e IDADE entre 0 e 27 dias e RACACOR
+# 4. Para informações maternas utilize TPMORTEOCO, ESC e IDADE
+
+
+# Tarefa 8: Exporte o banco de dados com o nome SIM_UF.csv
+
+# Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
+# Faça um merge de script de SIM para main
 
 
 #####################################################
