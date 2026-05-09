@@ -24,16 +24,16 @@ dados_sinasc_1 = subset(dados_sinasc, select = c(1,4,5,6,7,12,13,14,15,19,21,22,
 # Tarefa 3. Reduzir dados_sinasc_1 apenas para o estado que o aluno irá trabalhar (utilizar os dois primeiros dígitos de CODMUNRES), nomeando este novo banco de dados como dados_sinasc_2
 # Códigos das UF: 11: RO, 12: AC, 13: AM, 14: RR, 15: PA, 16: AP, 17: TO, 21: MA, 22: PI, 23: CE, 24: RN
 # 25: PB, 26: PE, 27: AL, 28: SE, 29: BA, 31: MG, 32: ES, 33: RJ, 35: SP, 41: PR, 42: SC, 43: RS
-# 50: MS, 51: MT, 52: GO, 53: DF 
+# 50: MS, 51: MT, 52: GO, 53: DF
 
 UF = substr(as.character(dados_sinasc_1$CODMUNRES),1,2)
 dados_sinasc_2 = dados_sinasc_1[UF == "16",]
 # observar abaixo o número de nascimentos por UF de residência para certificar-se que seu banco de dados está correto
 # 11: 27918     12: 16980     13: 80097     14: 11409     15: 143657    16: 15750      17: 25110
 # 21: 117564    22: 49253     23: 132516    24: 49099     25: 59089     26: 145024     27: 52257     28: 34917     29: 206655
-# 31: 268305    32: 56941     33: 236960    35: 634026     
+# 31: 268305    32: 56941     33: 236960    35: 634026    
 # 41: 160947    42: 97223     43: 148359
-# 50: 44142     51: 56673     52: 100672    53: 46122 
+# 50: 44142     51: 56673     52: 100672    53: 46122
 
 # Exportar o arquivo com o nome dados_sinasc_2.csv
 write.csv(dados_sinasc_2 , "dados_sinasc_2.csv")
@@ -58,7 +58,7 @@ for (i in 1:length(NumIndesej)){
   dados_sinasc_2 = transforme(dados_sinasc_2,varsNec2[i],NumIndesej[i])
 }
 # Tarefa 6. Atribuir legendas para as categorias das variáveis investigadas na etapa 4.
-# Exemplo: dados_sinasc_2$KOTELCHUCK = factor(dados_sinasc_2$KOTELCHUCK, levels = c(1,2,3,4,5), 
+# Exemplo: dados_sinasc_2$KOTELCHUCK = factor(dados_sinasc_2$KOTELCHUCK, levels = c(1,2,3,4,5),
 # labels = c("Não realizou pré-natal", "Inadequado", "Intermediário", "Adequado",  
 # "Mais que adequado")
 
@@ -278,10 +278,10 @@ names(pes_resumo) = c("CODMUNRES","PESO_P25","PESO_P50","PESO_P75","PESO_MD","PE
 base = merge(base, pes_resumo, by = "CODMUNRES", all.x = TRUE)
 
 #TRPIG:
-tab_pig = table(dados_sinasc_2$CODMUNRES, dados_sinasc_2$F_PIG) 
-df_pig = as.data.frame.matrix(tab_pig) 
-names(df_pig) = c("TRPIG_P","TRPIG_A","TRPIG_G") 
-df_pig$CODMUNRES = rownames(df_pig) 
+tab_pig = table(dados_sinasc_2$CODMUNRES, dados_sinasc_2$F_PIG)
+df_pig = as.data.frame.matrix(tab_pig)
+names(df_pig) = c("TRPIG_P","TRPIG_A","TRPIG_G")
+df_pig$CODMUNRES = rownames(df_pig)
 base = merge(base,df_pig,by="CODMUNRES",all.x=TRUE) #Você pediu especificadamente gestações únicas, mas já contamos o PIG apenas para gestações únicas, então a contagem vale só para os valores que não são NA
 
 #TRAPG5:
@@ -339,53 +339,80 @@ write.csv(SINASC_AC, "SINASC_AP.csv")
 ##################################
 # Só inicie esta Etapa quando a professora orientar
 # Altere o script esqueleto nas partes que se refere a ETAPA 2 e envie para o repositório Extensao tendo feito o commite "Esqueleto atualizado na Etapa 2"
+
+# Professora, eu só li as instruções após ter dado o merge, nomeei o comentario "Alterando orientações da etapa 2"
+
 # A partir de main crie a branch SIM
 # ESTANDO NA BRANCH SIM, NÃO ALTERE NADA NO SCRIPT REFERENTE A ETAPA 1 e só insira comandos na ETAPA 2
-# Para realizar as tarefas da ETAPA 2, ABRIR ANTES uma branch de nome SINASC no main de Extensao e ir para ela
+# Para realizar as tarefas da ETAPA 2, ABRIR ANTES uma branch de nome SIM no main de Extensao e ir para ela
 
 # Tarefa 1. Leitura do banco de dados Mortalidade_Geral_2015 do SIM 2015 com 1216475 linhas e 87 colunas
 # verificar se a leitura foi feita corretamente e a estrutura dos dados
 # nomeie o banco de dados como dados_sim
+dados_sim = read.csv("Mortalidade_Geral_2015.csv", header = TRUE, sep=";")
 
 
 # Tarefa 2. Reduzir dados_sim apenas para as colunas que serão utilizadas, nomeando este novo banco de dados como dados_sim_1
 # as colunas serão: 1, 3, 4, 8, 9, 10, 11, 14, 17, 35, 36, 37, 47, 77, 84
-# nomes das respectivas variáveis: CONTADOR, TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO, RACACOR, ESC2010, CODMUNRES, TPMORTEOCO, 
+# nomes das respectivas variáveis: CONTADOR, TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO, RACACOR, ESC2010, CODMUNRES, TPMORTEOCO,
 # OBITOGRAV, OBITOPUERP, CAUSABAS, TPOBITOCOR, MORTEPARTO
-
+dados_sim_1 = subset(dados_sim, select = c(1,3,4,8,9,10,11,14,17,35,36,37,47,77,84))
 # Tarefa 3. Reduzir dados_sim_1 apenas para o estado que o aluno irá trabalhar (utilizar os dois primeiros dígitos de CODMUNRES), nomeando este novo banco de dados como dados_sim_2
 # Códigos das UF: 11: RO, 12: AC, 13: AM, 14: RR, 15: PA, 16: AP, 17: TO, 21: MA, 22: PI, 23: CE, 24: RN
 # 25: PB, 26: PE, 27: AL, 28: SE, 29: BA, 31: MG, 32: ES, 33: RJ, 35: SP, 41: PR, 42: SC, 43: RS
-# 50: MS, 51: MT, 52: GO, 53: DF 
+# 50: MS, 51: MT, 52: GO, 53: DF
+UF_sim = substr(as.character(dados_sim_1$CODMUNRES),1,2)
+dados_sim_2 = dados_sim_1[UF_sim == "16",]
 
 # observar abaixo o número de óbitos por UF de residência para certificar-se que seu banco de dados está correto
 # 11: 7948      12: 3517      13: 16675     14: 2091      15: 37365     16: 2946       17: 7402
 # 21: 33666     22: 19366     23: 55258     24: 20153     25: 26422     26: 62556      27: 19756     28: 13453     29: 87083
-# 31: 131274    32: 22332     33: 127714    35: 287645     
+# 31: 131274    32: 22332     33: 127714    35: 287645    
 # 41: 70839     42: 37984     43: 82349
 # 50: 15457     51: 17095     52: 38854     53: 11975
 
 # Exportar o arquivo com o nome dados_sim_2.csv
 
+write.csv(dados_sim_2, "dados_sim_2.csv")
 
 # Ao concluir a Tarefa 3 da Etapa 2 commite e envie para o repositório REMOTO o script e dados_sim_2.csv com o comentário "Dados do estado UF (coloque o nome da UF) e script de sua obtenção"
 
 
-# Tarefa 4. Verificar em dados_sim_2 a frequência das categorias das seguintes variáveis: TIPOBITO, SEXO, RACACOR, 
+# Tarefa 4. Verificar em dados_sim_2 a frequência das categorias das seguintes variáveis: TIPOBITO, SEXO, RACACOR,
 # TPMORTEOCO, OBITOGRAV, OBITOPUERP, CAUSABAS, TPOBITOCOR, MORTEPARTO
 
+varsNec_sim = c("TIPOBITO", "SEXO", "RACACOR", "TPMORTEOCO", "OBITOGRAV", "OBITOPUERP", "CAUSABAS", "TPOBITOCOR", "MORTEPARTO")
+lapply(dados_sim_2[varsNec_sim], table, useNA = "always")
 
 # Tarefa 5. Atribuir para cada variável de dados_sim_2 como sendo NA a categoria de "Não informado ou Ignorado", geralmente com código 9
 # veja o dicionário do SIM para identificar qual o código das categorias de cada variável
 # Em variáveis quantitativas como IDADE verificar se existem valores como 99 para NA
 
+vars_nec2_sim = c("TPMORTEOCO", "OBITOGRAV", "OBITOPUERP","TPOBITOCOR","MORTEPARTO","IDADE","SEXO","ESC2010")
+nums_indesej2 = c(9,9,9,9,9,999,9,9)
+transforme_sim = function(df,col,numero){
+  df[[col]][df[col] == numero] = NA
+  df
+}
+for (i in 1:length(nums_indesej2)){
+  dados_sim_2 = transforme_sim(dados_sim_2,vars_nec2_sim[i],nums_indesej2[i])
+}
 
 # Tarefa 6. Atribuir legendas para as categorias das variáveis qualitativas investigadas na tarefa 4.
-# Exemplo: dados_sim_2$TIPOBITO = factor(dados_sim_2$TIPOBITO, levels = c(1,2), 
+# Exemplo: dados_sim_2$TIPOBITO = factor(dados_sim_2$TIPOBITO, levels = c(1,2),
 # labels = c("Fetal", "Não fetal")
 
 # ATENçÃO: 1. Na hora de escrever os labels, somente a primeira letra da palavra é maiúscula. Exemplo para SEXO: Feminino e Masculino
 #          2. Nesta Tarefa 6 não crie novas variáveis no banco de dados
+
+dados_sim_2$TIPOBITO = factor(dados_sim_2$TIPOBITO, c(1,2) ,c("Fetal","Não fetal"))
+dados_sim_2$SEXO = factor(dados_sim_2$SEXO, c(1,2),c("Masculino","Feminino"))
+dados_sim_2$RACACOR = factor(dados_sim_2$RACACOR, c(1,2,3,4,5),c("Branca","Preta","Amarela","Parda","Indígena"))
+dados_sim_2$TPMORTEOCO = factor(dados_sim_2$TPMORTEOCO, c(1,2,3,4,5,8),c("Na gravidez","No parto","No abortamento","Até 42 dias após o termino do parto","De 43 dias a 1 ano após o término da gestação", "Não ocorreu nestes períodos"))
+dados_sim_2$OBITOGRAV = factor(dados_sim_2$OBITOGRAV, c(1,2), c("Sim","Não"))
+dados_sim_2$OBITOPUERP = factor(dados_sim_2$OBITOPUERP, c(1,2,3), c("Sim, até 42 dias após o parto","Sim, de 43 dias a 1 ano","Não"))
+dados_sim_2$TPOBITOCOR = factor(dados_sim_2$TPOBITOCOR, c(1,2,3,4,5,6,7,8,9), c("Durante a gestação","Durante o abortamento","Após o abortamento","No parto ou até 1 hora após o parto", "No puerpério - até 42 dias após o parto", "Entre 43 dias e até 1 ano após o parto", "A investigação não identificou o momento do óbito", "Mais de um ano após o parto","O obito não ocorreu nas circunstancias anteriores"))
+dados_sim_2$MORTEPARTO = factor(dados_sim_2$MORTEPARTO, c(1,2,3), c("Antes","Durante","Após"))
 
 
 # Tarefa 7. Crie um banco de dados, de nome SIM_UF.csv (Exemplo: SIM_RJ.csv), contendo as 41 variáveis listadas no arquivo “Variáveis - Projeto - Tarefa 7 da Etapa 2.pdf”
@@ -395,9 +422,203 @@ write.csv(SINASC_AC, "SINASC_AP.csv")
 # 3. Para informações neonatais utilize TIPOBITO não fetal e IDADE entre 0 e 27 dias e RACACOR
 # 4. Para informações maternas utilize TPMORTEOCO, ESC e IDADE
 
+base_sim = data.frame(CODMUNRES=sort(unique(dados_sim_2$CODMUNRES)))
+base_sim = cbind(ANO = 2015, base_sim)
+
+#TO:
+
+TO = as.data.frame(table(factor(dados_sim_2$CODMUNRES, levels=base_sim$CODMUNRES)))
+names(TO) = c("CODMUNRES","TO")
+base_sim = merge(base_sim,TO,by="CODMUNRES", all.x=TRUE)
+
+#TORC:
+dados_UF_sim = dados_sim[substr(as.character(dados_sim$CODMUNRES),1,2)=="16",]
+dados_UF_comp_sim = dados_UF_sim[complete.cases(dados_UF_sim),]
+TORC = as.data.frame(table(factor(dados_UF_comp_sim$CODMUNRES, levels = base_sim$CODMUNRES)))
+names(TORC) = c("CODMUNRES","TORC")
+base_sim = merge(base_sim,TORC,by="CODMUNRES",all.x = TRUE)
+
+#TORCR:
+dados_UF_1_sim = dados_sim_1[substr(as.character(dados_sim_1$CODMUNRES), 1, 2) == "16",]
+dados_UF_1_comp_sim = dados_UF_1_sim[complete.cases(dados_UF_1_sim), ]
+TORCR = as.data.frame(table(factor(dados_UF_1_comp_sim$CODMUNRES, levels = base_sim$CODMUNRES)))
+names(TORCR) = c("CODMUNRES","TORCR")
+base_sim = merge(base_sim, TORCR, by = "CODMUNRES", all.x = TRUE)
+
+#TO_NN:
+to_nn_filtrado = dados_sim_2[grepl("^[VWXY]", dados_sim_2$CAUSABAS), ]
+to_nn_tab = table(to_nn_filtrado$CODMUNRES)
+df_to_nn = as.data.frame(to_nn_tab)
+names(df_to_nn) = c("CODMUNRES","TO_NN")
+base_sim = merge(base_sim, df_to_nn, by = "CODMUNRES", all.x = TRUE)
+#TO_N:
+to_n_filtrado = dados_sim_2[!grepl("^[VWXY]", dados_sim_2$CAUSABAS), ]
+to_n_tab = table(to_n_filtrado$CODMUNRES)
+df_to_n = as.data.frame(to_n_tab)
+names(df_to_n) = c("CODMUNRES","TO_N")
+base_sim = merge(base_sim, df_to_n, by = "CODMUNRES", all.x = TRUE)
+
+#TO_CB_I:
+
+to_cb_i_filtrado = dados_sim_2[grepl("^[AB]", dados_sim_2$CAUSABAS), ]
+to_cb_i_tab = table(to_cb_i_filtrado$CODMUNRES)
+df_to_cb_i = as.data.frame(to_cb_i_tab)
+names(df_to_cb_i) = c("CODMUNRES","TO_CB_I")
+base_sim = merge(base_sim, df_to_cb_i, by = "CODMUNRES", all.x = TRUE)
+
+#TO_CB_N:
+to_cb_n_filtrado = dados_sim_2[grepl("^[CD]", dados_sim_2$CAUSABAS), ]
+to_cb_n_tab = table(to_cb_n_filtrado$CODMUNRES)
+df_to_cb_n = as.data.frame(to_cb_n_tab)
+names(df_to_cb_n) = c("CODMUNRES","TO_CB_N")
+base_sim = merge(base_sim, df_to_cb_n, by = "CODMUNRES", all.x = TRUE)
+
+#TO_CB_C:
+to_cb_c_filtrado = dados_sim_2[grepl("^[I]", dados_sim_2$CAUSABAS), ]
+to_cb_c_tab = table(to_cb_c_filtrado$CODMUNRES)
+df_to_cb_c = as.data.frame(to_cb_c_tab)
+names(df_to_cb_c) = c("CODMUNRES","TO_CB_C")
+base_sim = merge(base_sim, df_to_cb_c, by = "CODMUNRES", all.x = TRUE)
+
+#TO_CB_R:
+
+to_cb_r_filtrado = dados_sim_2[grepl("^[J]", dados_sim_2$CAUSABAS), ]
+to_cb_r_tab = table(to_cb_r_filtrado$CODMUNRES)
+df_to_cb_r = as.data.frame(to_cb_r_tab)
+names(df_to_cb_r) = c("CODMUNRES","TO_CB_R")
+base_sim = merge(base_sim, df_to_cb_r, by = "CODMUNRES", all.x = TRUE)
+
+#TO_CB_O:
+
+to_cb_o_filtrado = dados_sim_2[!grepl("^[ABCDIJVWXY]", dados_sim_2$CAUSABAS), ]
+to_cb_o_tab = table(to_cb_o_filtrado$CODMUNRES)
+df_to_cb_o = as.data.frame(to_cb_o_tab)
+names(df_to_cb_o) = c("CODMUNRES","TO_CB_O")
+base_sim = merge(base_sim, df_to_cb_o, by = "CODMUNRES", all.x = TRUE)
+
+#TO_M e TO_F:
+
+tab_TOM = table(dados_sim_2$CODMUNRES, dados_sim_2$SEXO)
+df_tom = as.data.frame.matrix(tab_TOM)
+names(df_tom) = c("TO_M","TO_F")
+df_tom$CODMUNRES = rownames(df_tom)
+base_sim = merge(base_sim,df_tom,by="CODMUNRES",all.x=TRUE)
+
+#TO_F_IF:
+
+to_f_filtrado = dados_sim_2[dados_sim_2$IDADE >= 415 & dados_sim_2$IDADE <= 449, ]
+tab_to_f_if = table(to_f_filtrado$CODMUNRES)
+df_to_f_if = as.data.frame(tab_to_f_if)
+names(df_to_f_if) = c("CODMUNRES", "TO_F_IF")
+base_sim = merge(base_sim, df_to_f_if, by = "CODMUNRES", all.x = TRUE)
+
+#TO_FT:
+todos_ob = unique(dados_sim_2$CODMUNRES)
+
+df_to_ft = data.frame(CODMUNRES = todos_ob, Freq = 0) #Tive que fazer isso pois não existe nenhum caso com morte fetal. Não da pra fazer table.
+names(df_to_ft) = c("CODMUNRES","TO_FT")
+base_sim = merge(base_sim, df_to_ft, by = "CODMUNRES", all.x = TRUE) 
+
+#TO_NT:
+
+to_nt_filtrado = dados_sim_2[dados_sim_2$IDADE >= 200 & dados_sim_2$IDADE <= 227 | dados_sim_2$IDADE <= 123, ]
+tab_to_nt = table(to_nt_filtrado$CODMUNRES)
+df_to_nt = as.data.frame(tab_to_nt)
+names(df_to_nt) = c("CODMUNRES", "TO_NT")
+base_sim = merge(base_sim, df_to_nt, by = "CODMUNRES", all.x = TRUE)
+
+#TO_NT_P e T:
+
+to_nt_pt_filtrado$TYPE = ifelse(to_nt_filtrado$IDADE <= 206 & to_nt_filtrado$IDADE >= 200 | to_nt_filtrado$IDADE <= 123, "TO_NT_P", "TO_NT_T")
+tab_to_nt_pt = table(to_nt_filtrado$CODMUNRES, to_nt_pt_filtrado$TYPE)
+tab_to_nt_pt
+df_to_nt_pt = as.data.frame.matrix(tab_to_nt_pt)
+names(df_to_nt_pt) = c("TO_NT_P", "TO_NT_T")
+df_to_nt_pt$CODMUNRES = rownames(df_to_nt_pt)
+base_sim = merge(base_sim, df_to_nt_pt, by = "CODMUNRES", all.x = TRUE)
+
+#TO_PNT:
+
+to_pnt_filtrado = dados_sim_2[dados_sim_2$IDADE >= 228 & dados_sim_2$IDADE <= 231 | dados_sim_2$IDADE >= 301 & dados_sim_2$IDADE <= 312, ]
+tab_to_pnt = table(to_pnt_filtrado$CODMUNRES)
+df_to_pnt = as.data.frame(tab_to_pnt)
+names(df_to_pnt) = c("CODMUNRES", "TO_PNT")
+base_sim = merge(base_sim, df_to_pnt, by = "CODMUNRES", all.x = TRUE)
+
+#TO_MT_G:
+to_mt_g_filtrado = dados_sim_2[dados_sim_2$TPMORTEOCO == "Na gravidez", ]
+tab_to_mt_g = table(to_mt_g_filtrado$CODMUNRES)
+df_to_mt_g = as.data.frame(tab_to_mt_g)
+names(df_to_mt_g) = c("CODMUNRES","TO_MT_G")
+base_sim = merge(base_sim, df_to_mt_g, by = "CODMUNRES", all.x = TRUE)
+
+#TONT_B, PT, A, PD, I:
+
+tab_tont = table(to_nt_filtrado$CODMUNRES, to_nt_filtrado$RACACOR)
+df_tont = as.data.frame.matrix(tab_tont)
+names(df_tont) = c("TONT_B","TONT_PT","TONT_A","TONT_PD","TONT_I")
+df_tont$CODMUNRES = rownames(df_tont)
+base_sim = merge(base_sim, df_tont, by="CODMUNRES", all.x = T)
+
+#TO_MT:
+to_mt_filtrado = dados_sim_2[!(is.na(dados_sim_2$TPMORTEOCO)), ]
+tab_to_mt = table(to_mt_filtrado$CODMUNRES)
+df_to_mt = as.data.frame(tab_to_mt)
+names(df_to_mt) = c("CODMUNRES", "TO_MT")
+base_sim = merge(base_sim, df_to_mt, by = "CODMUNRES", all.x = T)
+
+#TO_MT_DG,PT,AB,42,43
+to_mt_dg_filtrado <- to_mt_filtrado
+to_mt_dg_filtrado$TPMORTEOCO[to_mt_dg_filtrado$TPMORTEOCO == "Não ocorreu nestes períodos"] = NA
+to_mt_dg_filtrado$TPMORTEOCO = droplevels(to_mt_dg_filtrado$TPMORTEOCO)
+tab_to_mt_dg = table(to_mt_dg_filtrado$CODMUNRES, to_mt_dg_filtrado$TPMORTEOCO)
+df_to_mt_dg = as.data.frame.matrix(tab_to_mt_dg)
+names(df_to_mt_dg) = c("TO_MT_DG","TO_MT_PT","TO_MT_AB","TO_MT_42","TO_MT_43")
+df_to_mt_dg$CODMUNRES = rownames(df_to_mt_dg)
+base_sim = merge(base_sim, df_to_mt_dg, by = "CODMUNRES", all.x = TRUE)
+
+#TO_MT_P:
+to_mt_filtrado2 = to_mt_dg_filtrado
+to_mt_filtrado2$TPMORTEOCO[to_mt_dg_filtrado$TPMORTEOCO == "De 43 dias a 1 ano após o término da gestação"] = NA
+to_mt_filtrado2$TPMORTEOCO = droplevels(to_mt_dg_filtrado$TPMORTEOCO)
+tab_to_mt_filtrado2 = table(to_mt_filtrado2$CODMUNRES)
+df_to_mt_p = as.data.frame(tab_to_mt_filtrado2)
+names(df_to_mt_p) = c("CODMUNRES","TO_MT_P")
+base_sim = merge(base_sim, df_to_mt_p, by= "CODMUNRES", all.x = TRUE)
+
+#TO_MT_P_I:
+to_mt_p_i = to_mt_filtrado2[to_mt_filtrado2$IDADE >= 415 & to_mt_filtrado2$IDADE <= 449, ]
+tab_to_mt_p_i = table(to_mt_p_i$CODMUNRES)
+df_to_mt_p_i = as.data.frame(tab_to_mt_p_i)
+names(df_to_mt_p_i) = c("CODMUNRES", "TO_MT_P_I")
+base_sim = merge(base_sim, df_to_mt_p_i, by = "CODMUNRES", all.x = TRUE)
+
+#TO_MT_P_ES,EFI,EFII,EM,ESI,ESC
+
+tab_to_mt_p_es = table(to_mt_filtrado2$CODMUNRES, to_mt_filtrado2$ESC2010)
+df_to_mt_p_es = as.data.frame.matrix(tab_to_mt_p_es)
+names(df_to_mt_p_es) = c("TO_MT_P_ES","TO_MT_P_EFI","TO_MT_P_EFII","TO_MT_P_EM","TO_MT_P_ESI","TO_MT_P_ESC")
+df_to_mt_p_es$CODMUNRES = rownames(df_to_mt_p_es)
+base_sim = merge(base_sim, df_to_mt_p_es, by="CODMUNRES", all.x = TRUE)
+
+#Agora adicionando o Nivel.
+
+cols_contagem2 = setdiff(names(base_sim), c("CODMUNRES","ANO","TO","TORC","TORCR","TO_NN","TO_N","TO_CB_I","TO_CB_N","TO_CB_C","TO_CB_R","TO_CB_O","TO_M","TO_F","TO_F_IF","TO_FT","TO_NT","TO_NT_P","TO_NT_T","TO_PNT","TO_MT_G","TONT_B","TONT_PT","TONT_A","TONT_PD","TONT_I","TO_MT", "TO_MT_DG","TO_MT_PT","TO_MT_AB","TO_MT_42","TO_MT_43","TO_MT_P","TO_MT_P_I","TO_MT_P_ES","TO_MT_P_EFI","TO_MT_P_EFII","TO_MT_P_EM","TO_MT_P_ESI","TO_MT_P_ESC"))
+base_sim[cols_contagem2][is.na(base_sim[cols_contagem2])] = 0
+
+linha_estado2 = base_sim[1,]
+linha_estado2[,] = NA
+cols_contagem2 = setdiff(names(base_sim),c("CODMUNRES","ANO"))
+linha_estado2[cols_contagem2] = colSums(base_sim[cols_contagem2], na.rm = TRUE)
+
+linha_estado2$CODMUNRES  = 16 
+SIM_AC = rbind(linha_estado2, base_sim)
+SIM_AC$NIVEL = c("UF", rep("MUNICIPIO",nrow(SIM_AC)-1))
+SIM_AC$ANO = 2015
+SIM_AC = SIM_AC[,c("ANO","NIVEL","CODMUNRES", names(SIM_AC)[!names(SIM_AC) %in% c("ANO","NIVEL","CODMUNRES")])]
 
 # Tarefa 8: Exporte o banco de dados com o nome SIM_UF.csv
-
+write.csv(SIM_AC, "SIM_AP.csv")
 # Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
 # Faça um merge de script de SIM para main
 
@@ -430,4 +651,3 @@ write.csv(SINASC_AC, "SINASC_AP.csv")
 
 # 1. Enviar arquivos para as pastas do repositório da Professora no GitHUb
 # 2. A professora fará o empilhamentos dos dataframes
-
