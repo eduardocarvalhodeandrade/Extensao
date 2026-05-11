@@ -622,16 +622,43 @@ write.csv(SIM_AC, "SIM_AP.csv")
 # Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
 # Faça um merge de script de SIM para main
 
-
 #####################################################
 # ETAPA 3: OUTROS BANCOS DE DADOS: IBGE, SNIS, ...
 #####################################################
 # Só inicie esta Etapa quando a professora orientar
-# ESTANDO NA BRANCH SINASC, NÃO ALTERE NADA NO SCRIPT REFERENTE A ETAPA 3
+# Ao terminar a ETAPA 2 faça um merge de SIM para main
+# Altere as orientações do script e commit (em main) "Script com orientações ETAPA 3 - SIDRA"
+# Abra um branch OUTROS
+# Na branch OUTROS escreva os comandos da Tarefa 1 abaixo
 
-# Tarefa 1. Acesso aos bancos de dados e obtenção da informação
+# Tarefa 1. Acesso aos bancos de dados do SIDRA e obtenção da informação
+# Leia os arquivos:
+# 1. população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv  
+# 2. população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv
+# 3. população residente censo 2010 - por faixa etária -  UF - SIDRA - tabela_1552.csv
+# 4. população residente censo 2010 - por faixa etária e sexo -  municípios - SIDRA - tabela_1552.csv
 
+# A partir dos arquivos acima gere o banco de dados de nome SIDRA_UF com as seguintes variáveis:
+# 1  ANO    
+# 2  NIVEL
+# 3  CODMUNRES
+# 4 POPRE_T
+# 5 POPRC_T
+# 6 POPRC_M
+# 7 POPRC_F
+# 8 POPRC_15
+# 9 POPRC_15_49
+# 10 POPRC_50
+# 11 POPRC_F_15
+# 12 POPRC_F_15_49
+# 13 POPRC_F_50
 
+# Exporte o arquivo em formato CSV
+# Faça o commit com a mensagem "Script e dados TAREFA 3 - SIDRA"
+SIDRA = read.csv("população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv", header=T, sep=";")
+SIDRA2 = read.csv("população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv", header=T, sep=";")
+SIDRA3 = read.csv("população residente censo 2010 - por faixa etária - UF - SIDRA - tabela_1552.csv", header=T, sep=";")
+SIDRA4 = read.csv("população residente censo 2010 - por faixa etária e sexo - municípios - SIDRA - tabela_1552.csv", header=T, sep=";")
 
 #####################################################################################################
 # ETAPA 4: GERAR BANCO DE DADOS FINAL DO ESTADO, BASEADO NAS ANÁLISES DE SINASC, SIM, IBGE, SNIS,...
