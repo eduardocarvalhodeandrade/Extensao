@@ -568,9 +568,9 @@ names(df_to_mt) = c("CODMUNRES", "TO_MT")
 base_sim = merge(base_sim, df_to_mt, by = "CODMUNRES", all.x = T)
 
 #TO_MT_DG,PT,AB,42,43
-to_mt_dg_filtrado <- to_mt_filtrado
-to_mt_dg_filtrado$TPMORTEOCO[to_mt_dg_filtrado$TPMORTEOCO == "Não ocorreu nestes períodos"] = NA
+to_mt_dg_filtrado = to_mt_filtrado
 to_mt_dg_filtrado$TPMORTEOCO = droplevels(to_mt_dg_filtrado$TPMORTEOCO)
+to_mt_dg_filtrado$TPMORTEOCO[to_mt_dg_filtrado$TPMORTEOCO == "Não ocorreu nestes períodos"] = NA
 tab_to_mt_dg = table(to_mt_dg_filtrado$CODMUNRES, to_mt_dg_filtrado$TPMORTEOCO)
 df_to_mt_dg = as.data.frame.matrix(tab_to_mt_dg)
 names(df_to_mt_dg) = c("TO_MT_DG","TO_MT_PT","TO_MT_AB","TO_MT_42","TO_MT_43")
