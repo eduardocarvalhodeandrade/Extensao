@@ -623,7 +623,6 @@ SIM_AC = SIM_AC[,c("ANO","NIVEL","CODMUNRES", names(SIM_AC)[!names(SIM_AC) %in% 
 write.csv(SIM_AC, "SIM_AP.csv")
 # Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
 # Faça um merge de script de SIM para main
-
 #####################################################
 # ETAPA 3: OUTROS BANCOS DE DADOS: IBGE, SNIS, ...
 #####################################################
@@ -636,7 +635,7 @@ write.csv(SIM_AC, "SIM_AP.csv")
 # Tarefa 1. Acesso aos bancos de dados do SIDRA e obtenção da informação
 # Leia os arquivos:
 # 1. população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv  
-# 2. população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv
+# 2. população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv  
 # 3. população residente censo 2010 - por faixa etária -  UF - SIDRA - tabela_1552.csv
 # 4. população residente censo 2010 - por faixa etária e sexo -  municípios - SIDRA - tabela_1552.csv
 
@@ -765,6 +764,36 @@ base_sidra$NIVEL = ifelse(base_sidra$CODMUNRES == 16, "UF", "MUNICIPIO")
 base_sidra <- base_sidra[, c(1, ncol(base_sidra), 2:(ncol(base_sidra)-1))]
 
 write.csv(base_sidra, "SIDRA_AP")
+
+# Tarefa 2: Acesso aos bancos de dados do SINISA e obtenção da informação
+# Escreva os comandos da Tarefa 2 estando na branch OUTROS# Leia o arquivo agua e esgoto - município - 2015.csv 
+# A partir do arquivo acima gere o banco de dados de nome SINISA_UF com as seguintes variáveis:
+# 1  ANO    
+# 2  NIVEL
+# 3  CODMUNRES
+# 4 POPR_RA
+# 5 POPR_RE
+
+# Exporte o arquivo em formato CSV
+# Faça o commit com a mensagem "Script e dados TAREFA 3 - SINISA"
+
+# Tarefa 3: Acesso aos bancos de dados do ATLAS  e obtenção da informação
+# Escreva os comandos da Tarefa 3 estando na branch OUTROS
+# Leia os arquivos:
+# 1. códigos dos municípios - 2010.csv      
+# 2. IDHM - 2010 (CENSO) e 2015 (PNAD) - total e por sexo - UF - Atlas Brasil.csv
+# 3. IDHM - 2010 - municípios - Atlas Brasil.csv
+# A partir do arquivo acima gere o banco de dados de nome ATLAS_UF com as seguintes variáveis:
+# 1  ANO    
+# 2  NIVEL
+# 3  CODMUNRES
+# 4 IDHM_A
+# 5 IDHM_CA
+# 6 IDHM_CA_M
+# 7 IDHM_CA_F
+
+# Exporte o arquivo em formato CSV# Faça o commit com a mensagem "Script e dados TAREFA 3 - ATLAS"
+
 #####################################################################################################
 # ETAPA 4: GERAR BANCO DE DADOS FINAL DO ESTADO, BASEADO NAS ANÁLISES DE SINASC, SIM, IBGE, SNIS,...
 ######################################################################################################
