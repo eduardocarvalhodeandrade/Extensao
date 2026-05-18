@@ -529,13 +529,14 @@ base_sim = merge(base_sim, df_to_nt, by = "CODMUNRES", all.x = TRUE)
 
 #TO_NT_P e T:
 
-to_nt_pt_filtrado$TYPE = ifelse(to_nt_filtrado$IDADE <= 206 & to_nt_filtrado$IDADE >= 200 | to_nt_filtrado$IDADE <= 123, "TO_NT_P", "TO_NT_T")
-tab_to_nt_pt = table(to_nt_filtrado$CODMUNRES, to_nt_pt_filtrado$TYPE)
+to_nt_pt_filtrado = ifelse(to_nt_filtrado$IDADE <= 206 & to_nt_filtrado$IDADE >= 200 | to_nt_filtrado$IDADE <= 123, "TO_NT_P", "TO_NT_T")
+tab_to_nt_pt = table(to_nt_filtrado$CODMUNRES, to_nt_pt_filtrado)
 tab_to_nt_pt
 df_to_nt_pt = as.data.frame.matrix(tab_to_nt_pt)
 names(df_to_nt_pt) = c("TO_NT_P", "TO_NT_T")
 df_to_nt_pt$CODMUNRES = rownames(df_to_nt_pt)
 base_sim = merge(base_sim, df_to_nt_pt, by = "CODMUNRES", all.x = TRUE)
+
 
 #TO_PNT:
 
@@ -569,6 +570,7 @@ base_sim = merge(base_sim, df_to_mt, by = "CODMUNRES", all.x = T)
 
 #TO_MT_DG,PT,AB,42,43
 to_mt_dg_filtrado = to_mt_filtrado
+to_mt_dg_filtrado <- to_mt_filtrado
 to_mt_dg_filtrado$TPMORTEOCO = droplevels(to_mt_dg_filtrado$TPMORTEOCO)
 to_mt_dg_filtrado$TPMORTEOCO[to_mt_dg_filtrado$TPMORTEOCO == "Não ocorreu nestes períodos"] = NA
 tab_to_mt_dg = table(to_mt_dg_filtrado$CODMUNRES, to_mt_dg_filtrado$TPMORTEOCO)
@@ -622,17 +624,147 @@ write.csv(SIM_AC, "SIM_AP.csv")
 # Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
 # Faça um merge de script de SIM para main
 
-
 #####################################################
 # ETAPA 3: OUTROS BANCOS DE DADOS: IBGE, SNIS, ...
 #####################################################
 # Só inicie esta Etapa quando a professora orientar
-# ESTANDO NA BRANCH SINASC, NÃO ALTERE NADA NO SCRIPT REFERENTE A ETAPA 3
+# Ao terminar a ETAPA 2 faça um merge de SIM para main
+# Altere as orientações do script e commit (em main) "Script com orientações ETAPA 3 - SIDRA"
+# Abra um branch OUTROS
+# Na branch OUTROS escreva os comandos da Tarefa 1 abaixo
 
-# Tarefa 1. Acesso aos bancos de dados e obtenção da informação
+# Tarefa 1. Acesso aos bancos de dados do SIDRA e obtenção da informação
+# Leia os arquivos:
+# 1. população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv  
+# 2. população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv
+# 3. população residente censo 2010 - por faixa etária -  UF - SIDRA - tabela_1552.csv
+# 4. população residente censo 2010 - por faixa etária e sexo -  municípios - SIDRA - tabela_1552.csv
+
+# A partir dos arquivos acima gere o banco de dados de nome SIDRA_UF com as seguintes variáveis:
+# 1  ANO    
+# 2  NIVEL
+# 3  CODMUNRES
+# 4 POPRE_T
+# 5 POPRC_T
+# 6 POPRC_M
+# 7 POPRC_F
+# 8 POPRC_15
+# 9 POPRC_15_49
+# 10 POPRC_50
+# 11 POPRC_F_15
+# 12 POPRC_F_15_49
+# 13 POPRC_F_50
+
+# Exporte o arquivo em formato CSV
+# Faça o commit com a mensagem "Script e dados TAREFA 3 - SIDRA"
+SIDRA = read.csv("população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv", header=T, sep=";")
+SIDRA2 = read.csv("população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv", header=T, sep=",")
+SIDRA3 = read.csv("população residente censo 2010 - por faixa etária - UF - SIDRA - tabela_1552.csv", header=T, sep=";")
+SIDRA4 = read.csv("população residente censo 2010 - por faixa etária e sexo - municípios - SIDRA - tabela_1552.csv", header=T, sep=";")
+
+UFSIDRA = substr(as.character(SIDRA$CODMUNRES),1,2)
+dados_sidra = SIDRA[UFSIDRA == "16",]
+UFSIDRA2 = substr(as.character(SIDRA2$CODMUNRES),1,2)
+dados_sidra2 = SIDRA2[UFSIDRA2 == "16",]
+UFSIDRA3 = substr(as.character(SIDRA3$CODMUNRES),1,2)
+dados_sidra3 <- SIDRA3[UFSIDRA3 == "16" & !is.na(UFSIDRA3), ] # Por algum motivo, havia uma linha inteira de NAs a mais, que não existe no dataframe original.
+
+UFSIDRA4 = substr(as.character(SIDRA4$CODMUNRES),1,2)
+dados_sidra4 = SIDRA4[UFSIDRA4 == "16",]
+
+lapply(dados_sidra, table, useNA = "always")
+lapply(dados_sidra2, table, useNA = "always")
+lapply(dados_sidra3, table, useNA = "always") 
+lapply(dados_sidra4, table, useNA = "always")
+
+base_sidra = data.frame(CODMUNRES=sort(unique(dados_sidra$CODMUNRES)))
+base_sidra = cbind(ANO = 2015, base_sidra)
+
+#POPRE_T:
+popre_t = dados_sidra[, c(1,3)]
+base_sidra = merge(base_sidra, popre_t, by="CODMUNRES", all.x = T)
+
+#POPRC:
+poprc = dados_sidra2[, c(1,3,4,5)]
+base_sidra = merge(base_sidra, poprc, by = "CODMUNRES", all.x = TRUE)
+
+#POPRC_15, 15_49, 50:
+poprc_15 = dados_sidra4[dados_sidra4$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","10 a 14 anos") ,]
+poprc_49 = dados_sidra4[dados_sidra4$F_IDADE %in% c("15 a 19 anos","20 a 24 anos","25 a 29 anos","30 a 34 anos","35 a 39 anos","40 a 44 anos", "45 a 49 anos"),]
+poprc_50 = dados_sidra4[dados_sidra4$F_IDADE %in% c("50 a 54 anos","55 a 59 anos","60 a 64 anos","65 a 69 anos", "70 a 74 anos","75 a 79 anos", "80 a 89 anos", "90 a 99 anos","100 anos ou mais"),]
+
+df_poprc_15 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+names(df_poprc_15) = c("CODMUNRES","POPRC_15")
+
+df_poprc_49 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+names(df_poprc_49) = c("CODMUNRES","POPRC_15_49")
+
+df_poprc_50 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+names(df_poprc_50) = c("CODMUNRES","POPRC_50")
+base_sidra = merge(base_sidra, df_poprc_15, by="CODMUNRES", all.x = T)
+base_sidra = merge(base_sidra, df_poprc_49, by="CODMUNRES", all.x = T)
+base_sidra = merge(base_sidra, df_poprc_50, by="CODMUNRES", all.x = T)
+
+#Adicionando a UF
 
 
+uf_poprc_15 = dados_sidra3[dados_sidra3$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","10 a 14 anos") ,]
+df_uf_pop15 = aggregate(POP ~ CODMUNRES, data = uf_poprc_15, sum)
+names(df_uf_pop15) = c("CODMUNRES","POPRC_15")
+uf_poprc_49 = dados_sidra3[dados_sidra3$F_IDADE %in% c("15 a 19 anos","20 a 24 anos","25 a 29 anos","30 a 34 anos","35 a 39 anos","40 a 44 anos", "45 a 49 anos") ,]
+df_uf_pop49 = aggregate(POP ~ CODMUNRES, data = uf_poprc_49, sum)
+names(df_uf_pop49) = c("CODMUNRES","POPRC_15_49")
+uf_poprc_50 = dados_sidra3[dados_sidra3$F_IDADE %in% c("50 a 54 anos","55 a 59 anos","60 a 64 anos","65 a 69 anos", "70 a 74 anos","75 a 79 anos", "80 a 89 anos", "90 a 99 anos","100 anos ou mais"),]
+df_uf_pop50 = aggregate(POP ~ CODMUNRES, data = uf_poprc_50, sum)
+names(df_uf_pop50) = c("CODMUNRES","POPRC_50")
 
+base_sidra$POPRC_15[base_sidra$CODMUNRES == 16] = df_uf_pop15$POPRC_15[df_uf_pop15$CODMUNRES == 16]
+
+base_sidra$POPRC_15_49[base_sidra$CODMUNRES == 16] = df_uf_pop49$POPRC_15_49[df_uf_pop49$CODMUNRES == 16]
+
+base_sidra$POPRC_50[base_sidra$CODMUNRES == 16] = df_uf_pop50$POPRC_50[df_uf_pop50$CODMUNRES == 16]
+
+#POPRC_F:
+
+poprc_f_15 = dados_sidra4[dados_sidra4$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","10 a 14 anos"),]
+df_popf_15 = aggregate(POPF ~ CODMUNRES, data = poprc_f_15, sum)
+names(df_popf_15) = c("CODMUNRES","POPRC_F_15")
+
+poprc_f_49 = dados_sidra4[dados_sidra4$F_IDADE %in% c("15 a 19 anos","20 a 24 anos","25 a 29 anos","30 a 34 anos","35 a 39 anos","40 a 44 anos", "45 a 49 anos") ,]
+df_popf_49 = aggregate(POPF ~ CODMUNRES, data = poprc_f_49, sum)
+names(df_popf_49) = c("CODMUNRES","POPRC_F_15_49")
+
+poprc_f_50 = dados_sidra4[dados_sidra4$F_IDADE %in% c("50 a 54 anos","55 a 59 anos","60 a 64 anos","65 a 69 anos", "70 a 74 anos","75 a 79 anos", "80 a 89 anos", "90 a 99 anos","100 anos ou mais"),]
+df_popf_50 = aggregate(POPF ~ CODMUNRES, data = poprc_f_49, sum)
+names(df_popf_50) = c("CODMUNRES","POPRC_F_50")
+
+base_sidra = merge(base_sidra, df_popf_15, by="CODMUNRES", all.x = T)
+base_sidra = merge(base_sidra, df_popf_49, by="CODMUNRES", all.x = T)
+base_sidra = merge(base_sidra, df_popf_50, by="CODMUNRES", all.x = T)
+
+#Adicionando a UF
+
+
+uf_poprc_15_f = dados_sidra3[dados_sidra3$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","10 a 14 anos") ,]
+df_uf_pop15_f = aggregate(POPF ~ CODMUNRES, data = uf_poprc_15_f, sum)
+names(df_uf_pop15_f) = c("CODMUNRES","POPRC_F_15")
+uf_poprc_49_f = dados_sidra3[dados_sidra3$F_IDADE %in% c("15 a 19 anos","20 a 24 anos","25 a 29 anos","30 a 34 anos","35 a 39 anos","40 a 44 anos", "45 a 49 anos") ,]
+df_uf_pop49_f = aggregate(POPF ~ CODMUNRES, data = uf_poprc_49_f, sum)
+names(df_uf_pop49_f) = c("CODMUNRES","POPRC_F_15_49")
+uf_poprc_50_f = dados_sidra3[dados_sidra3$F_IDADE %in% c("50 a 54 anos","55 a 59 anos","60 a 64 anos","65 a 69 anos", "70 a 74 anos","75 a 79 anos", "80 a 89 anos", "90 a 99 anos","100 anos ou mais"),]
+df_uf_pop50_f = aggregate(POPF ~ CODMUNRES, data = uf_poprc_50_f, sum)
+names(df_uf_pop50_f) = c("CODMUNRES","POPRC_F_50")
+
+base_sidra$POPRC_F_15[base_sidra$CODMUNRES == 16] = df_uf_pop15_f$POPRC_F_15[df_uf_pop15_f$CODMUNRES == 16]
+base_sidra$POPRC_F_15_49[base_sidra$CODMUNRES == 16] = df_uf_pop49_f$POPRC_F_15_49[df_uf_pop49_f$CODMUNRES == 16]
+base_sidra$POPRC_F_50[base_sidra$CODMUNRES == 16] = df_uf_pop50_f$POPRC_F_50[df_uf_pop50_f$CODMUNRES == 16]
+
+#adicionando UF.
+
+base_sidra$NIVEL = ifelse(base_sidra$CODMUNRES == 16, "UF", "MUNICIPIO")
+base_sidra <- base_sidra[, c(1, ncol(base_sidra), 2:(ncol(base_sidra)-1))]
+
+write.csv(base_sidra, "SIDRA_AP")
 #####################################################################################################
 # ETAPA 4: GERAR BANCO DE DADOS FINAL DO ESTADO, BASEADO NAS ANÁLISES DE SINASC, SIM, IBGE, SNIS,...
 ######################################################################################################
