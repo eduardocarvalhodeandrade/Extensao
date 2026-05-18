@@ -774,6 +774,22 @@ write.csv(base_sidra, "SIDRA_AP")
 # 4 POPR_RA
 # 5 POPR_RE
 
+dados_sinisa = read.csv("agua e esgoto - município - 2015.csv", header = T, sep = ";")
+UF_sinisa = substr(as.character(dados_sinisa$CODMUNRES),1,2)
+dados_sinisa_2 = dados_sinisa[UF_sinisa == "16",]
+
+base_sinisa = data.frame(CODMUNRES=sort(unique(dados_sinisa_2$CODMUNRES)))
+base_sinisa = cbind(ANO = 2015, base_sinisa)
+
+#POPRE_RA:
+df_popre_ra = dados_sinisa_2[, c(1,5)]
+base_sinisa = merge(base_sinisa, df_popre_ra, by="CODMUNRES", all.x = T)
+#POPRE_RE:
+df_popre_re = dados_sinisa_2[,c(1,6)]
+base_sinisa = merge(base_sinisa, df_popre_ra, by = "CODMUNRES", all.x = T)
+
+#TROQUE ELES POR NUMERIC E TENHA CERTEZA DE MULTIPLICAR POR 1000 PARA TIRAR AS VIRGULAS!!!!!!!!!!!!!!!!!!
+
 # Exporte o arquivo em formato CSV
 # Faça o commit com a mensagem "Script e dados TAREFA 3 - SINISA"
 
