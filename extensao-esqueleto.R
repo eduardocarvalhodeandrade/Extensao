@@ -657,7 +657,7 @@ write.csv(SIM_AC, "SIM_AP.csv")
 # Exporte o arquivo em formato CSV
 # Faça o commit com a mensagem "Script e dados TAREFA 3 - SIDRA"
 SIDRA = read.csv("população residente estimada - UF e municípios - 2015 - SIDRA - tabela_6579.csv", header=T, sep=";")
-SIDRA2 = read.csv("população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv", header=T, sep=",")
+SIDRA2 = read.csv("população residente censo 2010 - UF e municípios - total e por sexo - SIDRA - tabela_1552.csv", header=T, sep=";") #eu não tenho certeza o que tá acontecendo aqui, mas na UFF isso só funciona se o sep for "," e em casa só funciona se o sep for ";"
 SIDRA3 = read.csv("população residente censo 2010 - por faixa etária - UF - SIDRA - tabela_1552.csv", header=T, sep=";")
 SIDRA4 = read.csv("população residente censo 2010 - por faixa etária e sexo - municípios - SIDRA - tabela_1552.csv", header=T, sep=";")
 
@@ -783,14 +783,37 @@ base_sinisa = cbind(ANO = 2015, base_sinisa)
 
 #POPRE_RA:
 df_popre_ra = dados_sinisa_2[, c(1,5)]
+df_popre_ra$POPR_RA = as.numeric(df_popre_ra$POPR_RA)
+df_popre_ra$POPR_RA = df_popre_ra$POPR_RA * 1000
 base_sinisa = merge(base_sinisa, df_popre_ra, by="CODMUNRES", all.x = T)
+
+
 #POPRE_RE:
 df_popre_re = dados_sinisa_2[,c(1,6)]
-base_sinisa = merge(base_sinisa, df_popre_ra, by = "CODMUNRES", all.x = T)
+df_popre_re$POPR_RE = as.numeric(df_popre_re$POPR_RE)
+df_popre_re$POPR_RE = df_popre_re$POPR_RE * 1000
+base_sinisa = merge(base_sinisa, df_popre_re, by = "CODMUNRES", all.x = T)
 
-#TROQUE ELES POR NUMERIC E TENHA CERTEZA DE MULTIPLICAR POR 1000 PARA TIRAR AS VIRGULAS!!!!!!!!!!!!!!!!!!
+#adicionando nivel e linha UF
+
+LinhaSinisaUF = data.frame(
+  CODMUNRES = "16",
+  ANO = base_sinisa$ANO[1],  
+  POPR_RA = sum(base_sinisa$POPR_RA, na.rm = TRUE),
+  POPR_RE = sum(base_sinisa$POPR_RE, na.rm = TRUE),
+  NIVEL = "UF"
+)
+
+base_sinisa$NIVEL <- "MUNICIPIO"
+
+SINISA_AP = rbind(base_sinisa, LinhaSinisaUF)
+
+SINISA_AP <- SINISA_AP[, c("ANO", "NIVEL", "CODMUNRES", "POPR_RA", "POPR_RE")]
 
 # Exporte o arquivo em formato CSV
+
+write.csv(SINISA_AP, file = "SINISA_AP.csv")
+
 # Faça o commit com a mensagem "Script e dados TAREFA 3 - SINISA"
 
 # Tarefa 3: Acesso aos bancos de dados do ATLAS  e obtenção da informação
