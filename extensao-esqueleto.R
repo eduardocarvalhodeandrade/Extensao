@@ -822,17 +822,61 @@ write.csv(SINISA_AP, file = "SINISA_AP.csv")
 # 1. códigos dos municípios - 2010.csv      
 # 2. IDHM - 2010 (CENSO) e 2015 (PNAD) - total e por sexo - UF - Atlas Brasil.csv
 # 3. IDHM - 2010 - municípios - Atlas Brasil.csv
+dados_cod = read.csv("códigos dos municípios - 2010.csv", header = T, sep = ";")
+dados_cod_limpos = dados_cod[,c(1,2)]
+dados_idhm = read.csv("IDHM - 2010 (CENSO) e 2015 (PNAD) - total e por sexo - UF - Atlas Brasil.csv", header = T, sep = ";")
+dados_idhm_limpos = dados_idhm[, c(1,2,3,4,5,6,7)]
+dados_idh_municipio = read.csv("IDHM - 2010 - municípios - Atlas Brasil.csv", header = T, sep = ";")
+dados_idh_municipio_limpos = dados_idh_municipio[,c(1,2)]
+
+mun_sem_sigla = substr(dados_idh_municipio_limpos$município, 1, nchar(dados_idh_municipio_limpos$município)-5)
+dados_idh_municipio_limpos$município = mun_sem_sigla
+dados_idh_municipio_limpos = merge(dados_idh_municipio_limpos, dados_cod_limpos, by = "município", all.x = T)
+UFIDH = substr(as.character(dados_idh_municipio_limpos$CODMUNRES),1,2)
+dados_idh_municipio_final = dados_idh_municipio_limpos[UFIDH == "16",]
+dados_idh_municipio_final = dados_idh_municipio_final[-15,] # Por algum motivo, o municipio "Santana" Da bahia veio com o mesmo código de municipo de Santana do Amapá, então vou ter que remover ele manualmente.
+
+dados_idh_municipio_final = dados_idh_municipio_final[-9,] #Esse foi um NA que não fez sentido se quer existir, procurei de todas as formas o do por que ele estava sendo criado e não consegui encontrar um motivo. Removido manualmente.
+
+
 # A partir do arquivo acima gere o banco de dados de nome ATLAS_UF com as seguintes variáveis:
-# 1  ANO    
-# 2  NIVEL
-# 3  CODMUNRES
+# 1 ANO    
+# 2 NIVEL
+# 3 CODMUNRES
 # 4 IDHM_A
 # 5 IDHM_CA
 # 6 IDHM_CA_M
 # 7 IDHM_CA_F
 
-# Exporte o arquivo em formato CSV# Faça o commit com a mensagem "Script e dados TAREFA 3 - ATLAS"
+base_atlas = data.frame(CODMUNRES=sort(unique(dados_idh_municipio_final$CODMUNRES)))
+base_atlas = cbind(NIVEL = "MUNICIPIO", base_atlas)
+base_atlas = cbind(ANO = 2015, base_atlas)
 
+row_idhm = as.data.frame(dados_idhm_limpos[dados_idhm_limpos$UF == "Amapá", ])
+row_idhm = cbind(CODMUNRES = 16, row_idhm)
+
+#IDHM_A, sem dados para municipio.
+base_atlas$IDHM_A = NA
+
+#IDHM_CA
+dados_municipio_resum = dados_idh_municipio_final[,c(2,3)]
+names(dados_municipio_resum) = c("IDHM_CA", "CODMUNRES")
+base_atlas = merge(base_atlas, dados_municipio_resum, by = "CODMUNRES", all.x = TRUE)
+
+#IDHM_CA_M e F, sem dados para municipio.
+base_atlas$IDHM_CA_M = NA
+base_atlas$IDHM_CA_F = NA
+
+#Adicionando UF
+
+row_resu_idhm = row_idhm[,c(1,4,3,5,7)]
+row_resu_idhm$ANO = 2015
+row_resu_idhm$NIVEL = "UF"
+names(row_resu_idhm) = c("CODMUNRES","IDHM_A","IDHM_CA","IDHM_CA_M","IDHM_CA_F","ANO","NIVEL")
+row_resu_idhm = row_resu_idhm[,c(1,6,7,2,3,4,5)]
+base_atlas = rbind(base_atlas, row_resu_idhm)
+# Exporte o arquivo em formato CSV# Faça o commit com a mensagem "Script e dados TAREFA 3 - ATLAS"
+write.csv(base_atlas, "ATLAS_AP.csv")
 #####################################################################################################
 # ETAPA 4: GERAR BANCO DE DADOS FINAL DO ESTADO, BASEADO NAS ANÁLISES DE SINASC, SIM, IBGE, SNIS,...
 ######################################################################################################
