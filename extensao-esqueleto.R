@@ -774,7 +774,7 @@ write.csv(base_sidra, "SIDRA_AP")
 # 4 POPR_RA
 # 5 POPR_RE
 
-dados_sinisa = read.csv("agua e esgoto - município - 2015.csv", header = T, sep = ";")
+dados_sinisa = read.csv("agua e esgoto - município - 2015.csv", header = T, sep = ",") #esse é outro caso de que, em casa o separador ";" funciona, mas no computador da faculdade somente "," funciona
 UF_sinisa = substr(as.character(dados_sinisa$CODMUNRES),1,2)
 dados_sinisa_2 = dados_sinisa[UF_sinisa == "16",]
 
