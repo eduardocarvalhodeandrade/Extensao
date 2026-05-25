@@ -885,8 +885,13 @@ write.csv(base_atlas, "ATLAS_AP.csv")
 # Tarefa 1: Fazer o merge dos bancos de dados criados nas etapas anteriores (SIDRA_UF, ATLAS_ UF,  SINASC_UF, SIM_UF e SINISA_UF), 
 # sendo que as variáveis deverão seguir a ordem
 
+
+
 # ANO, NIVEL, CODMUNRES (uma única vez), variáveis do SIDRA, do ATLAS, do SINASC, do SIM e da SINISA. No merge deve constar 
 # qualquer município que esteja em pelo menos um dos bancos
+
+lista_bases = list(base_sidra, base_atlas, SIM_AC, SINISA_AP, SINASC_AC)
+DA_UF = Reduce(function(x,y) merge(x,y, by = c("CODMUNRES","ANO","NIVEL"), all = TRUE), lista_bases)
 
 # Chamar o banco de dados de DA_UF
 
