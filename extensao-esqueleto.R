@@ -323,13 +323,13 @@ linha_estado$IM_P50 = q[2]
 linha_estado$IM_P75 = q[3]
 
 linha_estado$CODMUNRES  = 16
-SINASC_AC = rbind(linha_estado, base)
-SINASC_AC$NIVEL = c("UF", rep("MUNICIPIO",nrow(SINASC_AC)-1))
-SINASC_AC$ANO = 2015
-SINASC_AC = SINASC_AC[,c("ANO","NIVEL","CODMUNRES", names(SINASC_AC)[!names(SINASC_AC) %in% c("ANO","NIVEL","CODMUNRES")])]
+SINASC_AP = rbind(linha_estado, base)
+SINASC_AP$NIVEL = c("UF", rep("MUNICIPIO",nrow(SINASC_AP)-1))
+SINASC_AP$ANO = 2015
+SINASC_AP = SINASC_AP[,c("ANO","NIVEL","CODMUNRES", names(SINASC_AP)[!names(SINASC_AP) %in% c("ANO","NIVEL","CODMUNRES")])]
 # Tarefa 11: Exporte o banco de dados com o nome SINASC_UF.csv
-
-write.csv(SINASC_AC, "SINASC_AP.csv")
+SINASC_AP = SINASC_AP[-2, ]
+write.csv(SINASC_AP, "SINASC_AP.csv")
 
 # Ao terminar a ETAPA 1 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 1"
 
@@ -614,13 +614,13 @@ cols_contagem2 = setdiff(names(base_sim),c("CODMUNRES","ANO"))
 linha_estado2[cols_contagem2] = colSums(base_sim[cols_contagem2], na.rm = TRUE)
 
 linha_estado2$CODMUNRES  = 16 
-SIM_AC = rbind(linha_estado2, base_sim)
-SIM_AC$NIVEL = c("UF", rep("MUNICIPIO",nrow(SIM_AC)-1))
-SIM_AC$ANO = 2015
-SIM_AC = SIM_AC[,c("ANO","NIVEL","CODMUNRES", names(SIM_AC)[!names(SIM_AC) %in% c("ANO","NIVEL","CODMUNRES")])]
+SIM_AP = rbind(linha_estado2, base_sim)
+SIM_AP$NIVEL = c("UF", rep("MUNICIPIO",nrow(SIM_AP)-1))
+SIM_AP$ANO = 2015
+SIM_AP = SIM_AP[,c("ANO","NIVEL","CODMUNRES", names(SIM_AP)[!names(SIM_AP) %in% c("ANO","NIVEL","CODMUNRES")])]
 
 # Tarefa 8: Exporte o banco de dados com o nome SIM_UF.csv
-write.csv(SIM_AC, "SIM_AP.csv")
+write.csv(SIM_AP, "SIM_AP.csv")
 # Ao terminar a ETAPA 2 commite e envie para o repositório REMOTO com o comentário "Dados da UF e Script Etapa 2"
 # Faça um merge de script de SIM para main
 #####################################################
@@ -676,16 +676,16 @@ lapply(dados_sidra2, table, useNA = "always")
 lapply(dados_sidra3, table, useNA = "always") 
 lapply(dados_sidra4, table, useNA = "always")
 
-base_sidra = data.frame(CODMUNRES=sort(unique(dados_sidra$CODMUNRES)))
-base_sidra = cbind(ANO = 2015, base_sidra)
+SIDRA_AP = data.frame(CODMUNRES=sort(unique(dados_sidra$CODMUNRES)))
+SIDRA_AP = cbind(ANO = 2015, SIDRA_AP)
 
 #POPRE_T:
 popre_t = dados_sidra[, c(1,3)]
-base_sidra = merge(base_sidra, popre_t, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, popre_t, by="CODMUNRES", all.x = T)
 
 #POPRC:
 poprc = dados_sidra2[, c(1,3,4,5)]
-base_sidra = merge(base_sidra, poprc, by = "CODMUNRES", all.x = TRUE)
+SIDRA_AP = merge(SIDRA_AP, poprc, by = "CODMUNRES", all.x = TRUE)
 
 #POPRC_15, 15_49, 50:
 poprc_15 = dados_sidra4[dados_sidra4$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","10 a 14 anos") ,]
@@ -700,9 +700,9 @@ names(df_poprc_49) = c("CODMUNRES","POPRC_15_49")
 
 df_poprc_50 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
 names(df_poprc_50) = c("CODMUNRES","POPRC_50")
-base_sidra = merge(base_sidra, df_poprc_15, by="CODMUNRES", all.x = T)
-base_sidra = merge(base_sidra, df_poprc_49, by="CODMUNRES", all.x = T)
-base_sidra = merge(base_sidra, df_poprc_50, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_poprc_15, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_poprc_49, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_poprc_50, by="CODMUNRES", all.x = T)
 
 #Adicionando a UF
 
@@ -717,11 +717,11 @@ uf_poprc_50 = dados_sidra3[dados_sidra3$F_IDADE %in% c("50 a 54 anos","55 a 59 a
 df_uf_pop50 = aggregate(POP ~ CODMUNRES, data = uf_poprc_50, sum)
 names(df_uf_pop50) = c("CODMUNRES","POPRC_50")
 
-base_sidra$POPRC_15[base_sidra$CODMUNRES == 16] = df_uf_pop15$POPRC_15[df_uf_pop15$CODMUNRES == 16]
+SIDRA_AP$POPRC_15[SIDRA_AP$CODMUNRES == 16] = df_uf_pop15$POPRC_15[df_uf_pop15$CODMUNRES == 16]
 
-base_sidra$POPRC_15_49[base_sidra$CODMUNRES == 16] = df_uf_pop49$POPRC_15_49[df_uf_pop49$CODMUNRES == 16]
+SIDRA_AP$POPRC_15_49[SIDRA_AP$CODMUNRES == 16] = df_uf_pop49$POPRC_15_49[df_uf_pop49$CODMUNRES == 16]
 
-base_sidra$POPRC_50[base_sidra$CODMUNRES == 16] = df_uf_pop50$POPRC_50[df_uf_pop50$CODMUNRES == 16]
+SIDRA_AP$POPRC_50[SIDRA_AP$CODMUNRES == 16] = df_uf_pop50$POPRC_50[df_uf_pop50$CODMUNRES == 16]
 
 #POPRC_F:
 
@@ -737,9 +737,9 @@ poprc_f_50 = dados_sidra4[dados_sidra4$F_IDADE %in% c("50 a 54 anos","55 a 59 an
 df_popf_50 = aggregate(POPF ~ CODMUNRES, data = poprc_f_49, sum)
 names(df_popf_50) = c("CODMUNRES","POPRC_F_50")
 
-base_sidra = merge(base_sidra, df_popf_15, by="CODMUNRES", all.x = T)
-base_sidra = merge(base_sidra, df_popf_49, by="CODMUNRES", all.x = T)
-base_sidra = merge(base_sidra, df_popf_50, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_popf_15, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_popf_49, by="CODMUNRES", all.x = T)
+SIDRA_AP = merge(SIDRA_AP, df_popf_50, by="CODMUNRES", all.x = T)
 
 #Adicionando a UF
 
@@ -754,16 +754,18 @@ uf_poprc_50_f = dados_sidra3[dados_sidra3$F_IDADE %in% c("50 a 54 anos","55 a 59
 df_uf_pop50_f = aggregate(POPF ~ CODMUNRES, data = uf_poprc_50_f, sum)
 names(df_uf_pop50_f) = c("CODMUNRES","POPRC_F_50")
 
-base_sidra$POPRC_F_15[base_sidra$CODMUNRES == 16] = df_uf_pop15_f$POPRC_F_15[df_uf_pop15_f$CODMUNRES == 16]
-base_sidra$POPRC_F_15_49[base_sidra$CODMUNRES == 16] = df_uf_pop49_f$POPRC_F_15_49[df_uf_pop49_f$CODMUNRES == 16]
-base_sidra$POPRC_F_50[base_sidra$CODMUNRES == 16] = df_uf_pop50_f$POPRC_F_50[df_uf_pop50_f$CODMUNRES == 16]
+SIDRA_AP$POPRC_F_15[SIDRA_AP$CODMUNRES == 16] = df_uf_pop15_f$POPRC_F_15[df_uf_pop15_f$CODMUNRES == 16]
+SIDRA_AP$POPRC_F_15_49[SIDRA_AP$CODMUNRES == 16] = df_uf_pop49_f$POPRC_F_15_49[df_uf_pop49_f$CODMUNRES == 16]
+SIDRA_AP$POPRC_F_50[SIDRA_AP$CODMUNRES == 16] = df_uf_pop50_f$POPRC_F_50[df_uf_pop50_f$CODMUNRES == 16]
 
 #adicionando UF.
 
-base_sidra$NIVEL = ifelse(base_sidra$CODMUNRES == 16, "UF", "MUNICIPIO")
-base_sidra <- base_sidra[, c(1, ncol(base_sidra), 2:(ncol(base_sidra)-1))]
+SIDRA_AP$NIVEL = ifelse(SIDRA_AP$CODMUNRES == 16, "UF", "MUNICIPIO")
+SIDRA_AP = SIDRA_AP[, c(1, ncol(SIDRA_AP), 2:(ncol(SIDRA_AP)-1))]
+colsSidra = ncol(SIDRA_AP)
+SIDRA_AP = SIDRA_AP[, c(3, 2, 1, 4:colsSidra)]
 
-write.csv(base_sidra, "SIDRA_AP")
+write.csv(SIDRA_AP, "SIDRA_AP")
 
 # Tarefa 2: Acesso aos bancos de dados do SINISA e obtenção da informação
 # Escreva os comandos da Tarefa 2 estando na branch OUTROS# Leia o arquivo agua e esgoto - município - 2015.csv 
@@ -774,7 +776,7 @@ write.csv(base_sidra, "SIDRA_AP")
 # 4 POPR_RA
 # 5 POPR_RE
 
-dados_sinisa = read.csv("agua e esgoto - município - 2015.csv", header = T, sep = ",") #esse é outro caso de que, em casa o separador ";" funciona, mas no computador da faculdade somente "," funciona
+dados_sinisa = read.csv("agua e esgoto - município - 2015.csv", header = T, sep = ";") #esse é outro caso de que, em casa o separador ";" funciona, mas no computador da faculdade somente "," funciona
 UF_sinisa = substr(as.character(dados_sinisa$CODMUNRES),1,2)
 dados_sinisa_2 = dados_sinisa[UF_sinisa == "16",]
 
@@ -848,24 +850,24 @@ dados_idh_municipio_final = dados_idh_municipio_final[-9,] #Esse foi um NA que n
 # 6 IDHM_CA_M
 # 7 IDHM_CA_F
 
-base_atlas = data.frame(CODMUNRES=sort(unique(dados_idh_municipio_final$CODMUNRES)))
-base_atlas = cbind(NIVEL = "MUNICIPIO", base_atlas)
-base_atlas = cbind(ANO = 2015, base_atlas)
+ATLAS_AP = data.frame(CODMUNRES=sort(unique(dados_idh_municipio_final$CODMUNRES)))
+ATLAS_AP = cbind(NIVEL = "MUNICIPIO", ATLAS_AP)
+ATLAS_AP = cbind(ANO = 2015, ATLAS_AP)
 
 row_idhm = as.data.frame(dados_idhm_limpos[dados_idhm_limpos$UF == "Amapá", ])
 row_idhm = cbind(CODMUNRES = 16, row_idhm)
 
 #IDHM_A, sem dados para municipio.
-base_atlas$IDHM_A = NA
+ATLAS_AP$IDHM_A = NA
 
 #IDHM_CA
 dados_municipio_resum = dados_idh_municipio_final[,c(2,3)]
 names(dados_municipio_resum) = c("IDHM_CA", "CODMUNRES")
-base_atlas = merge(base_atlas, dados_municipio_resum, by = "CODMUNRES", all.x = TRUE)
+ATLAS_AP = merge(ATLAS_AP, dados_municipio_resum, by = "CODMUNRES", all.x = TRUE)
 
 #IDHM_CA_M e F, sem dados para municipio.
-base_atlas$IDHM_CA_M = NA
-base_atlas$IDHM_CA_F = NA
+ATLAS_AP$IDHM_CA_M = NA
+ATLAS_AP$IDHM_CA_F = NA
 
 #Adicionando UF
 
@@ -874,9 +876,10 @@ row_resu_idhm$ANO = 2015
 row_resu_idhm$NIVEL = "UF"
 names(row_resu_idhm) = c("CODMUNRES","IDHM_A","IDHM_CA","IDHM_CA_M","IDHM_CA_F","ANO","NIVEL")
 row_resu_idhm = row_resu_idhm[,c(1,6,7,2,3,4,5)]
-base_atlas = rbind(base_atlas, row_resu_idhm)
+ATLAS_AP = rbind(ATLAS_AP, row_resu_idhm)
+
 # Exporte o arquivo em formato CSV# Faça o commit com a mensagem "Script e dados TAREFA 3 - ATLAS"
-write.csv(base_atlas, "ATLAS_AP.csv")
+write.csv(ATLAS_AP, "ATLAS_AP.csv")
 ################################################################
 # ETAPA 4: GERAR BANCO DE DADOS FINAL DO ESTADO COM DADOS DO SIDRA, ATLAS, SINASC, SIM, SINISA E INDICADORES
 ################################################################
@@ -890,8 +893,43 @@ write.csv(base_atlas, "ATLAS_AP.csv")
 # ANO, NIVEL, CODMUNRES (uma única vez), variáveis do SIDRA, do ATLAS, do SINASC, do SIM e da SINISA. No merge deve constar 
 # qualquer município que esteja em pelo menos um dos bancos
 
-lista_bases = list(base_sidra, base_atlas, SIM_AC, SINISA_AP, SINASC_AC)
-DA_UF = Reduce(function(x,y) merge(x,y, by = c("CODMUNRES","ANO","NIVEL"), all = TRUE), lista_bases)
+
+#Primeiro, concertando o caso dos CODMUNRES com apenas 6 digitos.
+
+concertar = function(vetor_coluna) {
+  correcoes = c(
+    "160080" = 1600808,
+    "160070" = 1600709,
+    "160060" = 1600600,
+    "160055" = 1600550,
+    "160053" = 1600535,
+    "160050" = 1600501,
+    "160040" = 1600402,
+    "160030" = 1600303,
+    "160027" = 1600279,
+    "160025" = 1600253,
+    "160023" = 1600238,
+    "160021" = 1600212,
+    "160020" = 1600204,
+    "160015" = 1600154,
+    "160010" = 1600105,
+    "160005" = 1600055,
+    "16" = 16
+  )
+  char_input = as.character(vetor_coluna)
+  
+  ifelse(char_input %in% names(correcoes), 
+         correcoes[char_input], 
+         vetor_coluna)
+}
+
+SIM_AP$CODMUNRES = concertar(SIM_AP$CODMUNRES)
+SINISA_AP$CODMUNRES = concertar(SINISA_AP$CODMUNRES)
+SINASC_AP$CODMUNRES = concertar(SINASC_AP$CODMUNRES)
+
+lista_bases = list(SIDRA_AP, ATLAS_AP, SINASC_AP, SIM_AP, SINISA_AP)
+
+BDEM_AP = Reduce(function(x,y) merge(x,y, by = c("CODMUNRES","ANO","NIVEL"), all = TRUE), lista_bases)
 
 # Chamar o banco de dados de DA_UF
 
@@ -901,8 +939,19 @@ DA_UF = Reduce(function(x,y) merge(x,y, by = c("CODMUNRES","ANO","NIVEL"), all =
 # Tarefa 2: Acrescentar no banco DA_UF os indicadores TFG, TMG, RMM, TMM, TMM_P, TMN, TMN_P, TMN_T e TMI e chamar o banco 
 # de BDEM_UF_2015
 
+BDEM_AP$TFG = (SINASC_AP$TN/SIDRA_AP$POPRC_F_15_49) * 1000
+BDEM_AP$TMG = (SIM_AP$TO/as.numeric(SIDRA_AP$POPRE_T)) * 1000
+BDEM_AP$RMM = (SIM_AP$TO_MT/SINASC_AP$TN) * 100000
+BDEM_AP$TMM = (SIM_AP$TO_MT/SIDRA_AP$POPRC_F_15_49) * 100000
+BDEM_AP$TMM_P = (SIM_AP$TO_MT_P/SIDRA_AP$POPRC_F_15_49) * 100000
+BDEM_AP$TMN = (SIM_AP$TO_NT/SINASC_AP$TN) * 1000
+BDEM_AP$TMN_P = (SIM_AP$TO_NT_P/SINASC_AP$TN) * 1000
+BDEM_AP$TMN_T = (SIM_AP$TO_NT_T/SINASC_AP$TN) * 1000
+BDEM_AP$TMI = ((SIM_AP$TO_NT + SIM_AP$TO_PNT)/SINASC_AP$TN) * 1000
+
 # Após a criação do banco, fazer commit “Script e dados BDEM_UF_2015”
 
+write.csv(BDEM_AP, "BDEM_AP.csv")
 
 ############################################################################################
 # ETAPA 5: EMPILHAMENTO DOS DATAFRAMES DE CADA ESTADO, GERANDO UM DATAFRAME DE 27 LINHAS
