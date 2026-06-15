@@ -322,7 +322,15 @@ linha_estado$IM_P25 = q[1]
 linha_estado$IM_P50 = q[2]
 linha_estado$IM_P75 = q[3]
 
+linha_estado$DG_MD = round(mean(dados_sinasc_2$SEMAGESTAC, na.rm = TRUE), 2)
+linha_estado$DG_DP = round(sd(dados_sinasc_2$SEMAGESTAC, na.rm = TRUE), 2)
+q_dg = round(quantile(dados_sinasc_2$SEMAGESTAC, probs = c(0.25, 0.5, 0.75), na.rm = TRUE), 2)
+linha_estado$DG_P25 = q_dg[1]
+linha_estado$DG_P50 = q_dg[2]
+linha_estado$DG_P75 = q_dg[3]
+
 linha_estado$CODMUNRES  = 16
+
 SINASC_AP = rbind(linha_estado, base)
 SINASC_AP$NIVEL = c("UF", rep("MUNICIPIO",nrow(SINASC_AP)-1))
 SINASC_AP$ANO = 2015
@@ -878,6 +886,12 @@ names(row_resu_idhm) = c("CODMUNRES","IDHM_A","IDHM_CA","IDHM_CA_M","IDHM_CA_F",
 row_resu_idhm = row_resu_idhm[,c(1,6,7,2,3,4,5)]
 ATLAS_AP = rbind(ATLAS_AP, row_resu_idhm)
 
+idh_cols = grep("IDHM", names(ATLAS_AP), value = TRUE)
+
+for (col in idh_cols) {
+  ATLAS_AP[[col]] = as.numeric(gsub(",", ".", ATLAS_AP[[col]]))
+}
+
 # Exporte o arquivo em formato CSV# Faça o commit com a mensagem "Script e dados TAREFA 3 - ATLAS"
 write.csv(ATLAS_AP, "ATLAS_AP.csv")
 ################################################################
@@ -949,6 +963,8 @@ BDEM_AP$TMN_P = (SIM_AP$TO_NT_P/SINASC_AP$TN) * 1000
 BDEM_AP$TMN_T = (SIM_AP$TO_NT_T/SINASC_AP$TN) * 1000
 BDEM_AP$TMI = ((SIM_AP$TO_NT + SIM_AP$TO_PNT)/SINASC_AP$TN) * 1000
 
+
+BDEM_AP <- BDEM_AP[, c(2, 3, 1, 4:ncol(BDEM_AP))]
 # Após a criação do banco, fazer commit “Script e dados BDEM_UF_2015”
 
 write.csv(BDEM_AP, "BDEM_AP.csv")
