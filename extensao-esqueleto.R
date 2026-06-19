@@ -700,13 +700,13 @@ poprc_15 = dados_sidra4[dados_sidra4$F_IDADE %in% c("0 a 4 anos","5 a 9 anos","1
 poprc_49 = dados_sidra4[dados_sidra4$F_IDADE %in% c("15 a 19 anos","20 a 24 anos","25 a 29 anos","30 a 34 anos","35 a 39 anos","40 a 44 anos", "45 a 49 anos"),]
 poprc_50 = dados_sidra4[dados_sidra4$F_IDADE %in% c("50 a 54 anos","55 a 59 anos","60 a 64 anos","65 a 69 anos", "70 a 74 anos","75 a 79 anos", "80 a 89 anos", "90 a 99 anos","100 anos ou mais"),]
 
-df_poprc_15 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+df_poprc_15 = aggregate(POP ~ CODMUNRES, data = poprc_15, sum)
 names(df_poprc_15) = c("CODMUNRES","POPRC_15")
 
-df_poprc_49 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+df_poprc_49 = aggregate(POP ~ CODMUNRES, data = poprc_49, sum)
 names(df_poprc_49) = c("CODMUNRES","POPRC_15_49")
 
-df_poprc_50 = aggregate(POP ~ CODMUNRES, data = dados_sidra4, sum)
+df_poprc_50 = aggregate(POP ~ CODMUNRES, data = poprc_50, sum)
 names(df_poprc_50) = c("CODMUNRES","POPRC_50")
 SIDRA_AP = merge(SIDRA_AP, df_poprc_15, by="CODMUNRES", all.x = T)
 SIDRA_AP = merge(SIDRA_AP, df_poprc_49, by="CODMUNRES", all.x = T)
